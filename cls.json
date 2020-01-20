@@ -1,0 +1,43 @@
+{
+    "courses": [
+        {
+            "course": "CS 3300",
+            "days": "MW",
+            "start": "605PM",
+            "end": "720PM"
+        },
+        {
+            "course": "CS 3300",
+            "days": "TR",
+            "start": "305AM",
+            "end": "4:20AM"
+        },
+        {
+            "course": "CS 4500",
+            "days": "MW",
+            "start": "305PM",
+            "end": "420PM"
+        },
+        {
+            "course": "ECE4330",
+            "days": "M",
+            "start": "800AM",
+            "end": "10:40AM"
+        },
+        {
+            "course": "ECE4242",
+            "days": "R",
+            "start": "8:00AM",
+            "end": "10:40AM"
+        },
+        {
+            "course": "ECE4891",
+            "days": "F",
+            "start": "8:00AM",
+            "end": "9:15AM"
+        }
+        
+    ]
+    
+}
+    
