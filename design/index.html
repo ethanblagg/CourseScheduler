@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <title>Course planner · prototype</title>
+    <link rel="stylesheet" href="./styles.css?v=3">
+    <script src="./prototype.js?v=3" defer></script>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="rail" aria-label="Prototype controls">
+        <p class="rail-title">Course planner<span>Prototype</span></p>
+        <div class="rail-group" role="group" aria-label="Start as">
+          <p class="rail-label">Start as</p>
+          <button type="button" data-start="new" aria-pressed="true">New user</button>
+          <button type="button" data-start="returning" aria-pressed="false">Returning user</button>
+        </div>
+        <nav class="rail-group" id="rail-jumps" aria-label="Jump to" hidden>
+          <p class="rail-label">Jump to</p>
+          <button type="button" data-jump="plans">Plans</button>
+          <button type="button" data-jump="plan">Fall 2026</button>
+          <button type="button" data-jump="course">CHEM 101</button>
+          <button type="button" data-jump="unavailable">Work</button>
+          <button type="button" data-jump="schedules">Schedules</button>
+          <button type="button" data-jump="nothing-fits">Nothing fits</button>
+        </nav>
+        <div class="rail-group" role="group" aria-label="View">
+          <p class="rail-label">View</p>
+          <button type="button" data-toggle="landscape" aria-pressed="false">Landscape</button>
+          <button type="button" data-toggle="theme" aria-pressed="false">Appearance: Auto</button>
+          <button type="button" data-toggle="largeText" aria-pressed="false">200% text</button>
+        </div>
+        <button type="button" data-rail="reset">Reset</button>
+        <p class="rail-note">Resets on reload</p>
+      </aside>
+      <main class="stage">
+        <div id="phone" class="phone">
+          <div id="app" class="app"></div>
+          <div id="overlay"></div>
+        </div>
+        <p id="status" class="visually-hidden" aria-live="polite"></p>
+      </main>
+    </div>
+  </body>
+</html>
