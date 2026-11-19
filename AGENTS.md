@@ -1,6 +1,22 @@
-# Course planner
+# Class Planner
 
-`main` holds the iOS work (issue #1); `master` is the legacy command-line version and must stay unchanged.
+`main` holds the iOS app (issue #1); `master` is the legacy C++ command-line version and must stay unchanged.
+
+## iOS app
+
+- `ClassPlanner.xcodeproj`: app target `ClassPlanner`, shown as "Class Planner", bundle ID `com.ethanblagg.ClassPlanner`, iPhone only, iOS 26 and newer. The `ClassPlanner/` folder is synced to the target, so new Swift files are picked up without editing the project.
+- `ClassPlannerCore/`: Swift package with the SwiftData models, weekly-time validation, plan naming, and `Plan.readiness`, which hands the scheduling engine a value-type `PlanInput` only when every entry is complete. Keep scheduling logic here, independent of SwiftUI.
+- SwiftData relationship arrays are unordered: every child has a `position`, and views use the `ordered…` accessors. Colors are stored apart from scheduling data and never affect `PlanInput` or starred schedules (`ScheduleKey`).
+
+Commands (run from the repository root):
+
+```sh
+swift test --package-path ClassPlannerCore
+(cd ClassPlannerCore && xcodebuild -scheme ClassPlannerCore -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath ../.build/CoreDerivedData test)
+xcodebuild -project ClassPlanner.xcodeproj -scheme ClassPlanner -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath .build/DerivedData build
+```
+
+The first is the fast macOS check; the second runs the same tests on iOS. If the simulator is missing, create it with `xcrun simctl create "iPhone 17" com.apple.CoreSimulator.SimDeviceType.iPhone-17 com.apple.CoreSimulator.SimRuntime.iOS-27-0`.
 
 ## Design checkpoint (issue #2)
 
