@@ -8,6 +8,14 @@
 - `ClassPlannerCore/`: Swift package with the SwiftData models, weekly-time validation, plan naming, and `Plan.readiness`, which hands the scheduling engine a value-type `PlanInput` only when every entry is complete. Keep scheduling logic here, independent of SwiftUI.
 - SwiftData relationship arrays are unordered: every child has a `position`, and views use the `ordered…` accessors. Colors are stored apart from scheduling data and never affect `PlanInput` or starred schedules (`ScheduleKey`).
 
+### Scheduling engine (`ScheduleSearch`)
+
+- Input is `PlanInput` from `Plan.readiness`. A schedule picks exactly one section per course and includes every meeting of that section. It is valid only if no class meetings overlap each other or any unavailable time. Meetings overlap only on a shared weekday when `start < otherEnd && otherStart < end`, so back-to-back times fit.
+- Outcomes are explicit: `.noCourses`, `.schedules`, `.noneFit` (smallest sets of courses that can't fit together, plus every meeting-level clash among them), or `.inconclusive` (the search budget ran out before finding any).
+- Summaries count class meetings only; unavailable times never count as days on campus. Gaps are the idle minutes between classes on each campus day, summed over the week. Example: Mon 9–10 and 11–12 is 60 minutes; Wed 9–10, 10–10:30, 11–12 and 12–12:15 is 30 minutes.
+- Two orderings: `fewestDays` (days, then gaps) and `shortestGaps` (gaps, then days); ties go to the earlier first class, then the earlier last class, then the key. Results keep the best 500 per ordering, with `totalCount` for all of them. `isExhaustive` is false if the 2,000,000-step budget stopped the search, in which case `totalCount` is a lower bound.
+- Call `ScheduleSearch.outcome(for:)` from the UI. It runs off the main actor and stops when its task is cancelled. Results don't depend on input order.
+
 Commands (run from the repository root):
 
 ```sh
