@@ -16,6 +16,34 @@ extension PlannerColor {
     }
 }
 
+struct Swatch: View {
+    let color: PlannerColor
+    let striped: Bool
+
+    var body: some View {
+        if striped {
+            Circle()
+                .fill(color.swatch.opacity(0.18))
+                .overlay {
+                    Canvas { context, size in
+                        var lines = Path()
+                        var x = -size.height
+                        while x < size.width {
+                            lines.move(to: CGPoint(x: x, y: size.height))
+                            lines.addLine(to: CGPoint(x: x + size.height, y: 0))
+                            x += max(3, size.width / 4)
+                        }
+                        context.stroke(lines, with: .color(color.swatch), lineWidth: max(1, size.width / 10))
+                    }
+                    .clipShape(Circle())
+                }
+                .overlay { Circle().strokeBorder(color.swatch, lineWidth: 1.5) }
+        } else {
+            Circle().fill(color.swatch)
+        }
+    }
+}
+
 enum TimeText {
     static func clock(_ minute: Int) -> String {
         let date = Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: .now) ?? .now

@@ -133,8 +133,11 @@ public final class Course {
 
     @discardableResult
     public func duplicateSection(_ original: CourseSection) -> CourseSection {
-        let number = (sections.compactMap { Int($0.label) }.max() ?? 0) + 1
-        let copy = CourseSection(label: String(format: "%02d", number), position: nextPosition(after: sections.map(\.position)))
+        appendCopy(of: original, label: nil)
+    }
+
+    func appendCopy(of original: CourseSection, label: String?) -> CourseSection {
+        let copy = CourseSection(label: label ?? nextSectionLabel, position: nextPosition(after: sections.map(\.position)))
         modelContext?.insert(copy)
         sections.append(copy)
         for meeting in original.orderedMeetings {
@@ -146,10 +149,13 @@ public final class Course {
         return copy
     }
 
+    var nextSectionLabel: String {
+        String(format: "%02d", (sections.compactMap { Int($0.label) }.max() ?? 0) + 1)
+    }
+
     @discardableResult
     public func addSection() -> CourseSection {
-        let number = (sections.compactMap { Int($0.label) }.max() ?? 0) + 1
-        let section = CourseSection(label: String(format: "%02d", number), position: nextPosition(after: sections.map(\.position)))
+        let section = CourseSection(label: nextSectionLabel, position: nextPosition(after: sections.map(\.position)))
         modelContext?.insert(section)
         sections.append(section)
         section.addMeeting(label: "Lecture")

@@ -24,7 +24,17 @@ swift test --package-path ClassPlannerCore
 xcodebuild -project ClassPlanner.xcodeproj -scheme ClassPlanner -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath .build/DerivedData build
 ```
 
-The first is the fast macOS check; the second runs the same tests on iOS. If the simulator is missing, create it with `xcrun simctl create "iPhone 17" com.apple.CoreSimulator.SimDeviceType.iPhone-17 com.apple.CoreSimulator.SimRuntime.iOS-27-0`.
+The first is the fast macOS check; the second runs the same tests on iOS.
+
+UI tests (`ClassPlannerUITests`, about two minutes) drive the entry flows in the simulator; set `TEST_RUNNER_SCREENSHOT_DIR` to save their screenshots:
+
+```sh
+TEST_RUNNER_SCREENSHOT_DIR=/tmp/class-planner-shots xcodebuild -project ClassPlanner.xcodeproj -scheme ClassPlanner -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath .build/DerivedData test
+```
+
+Debug launch arguments: `-ui-testing` uses an in-memory store, and `-seed-sample` adds the Fall 2026 sample plan (CHEM 101 with three sections, MATH 120, Work, Weekend shift).
+
+Deletes follow the Undo pattern: `remove…` returns a snapshot, the app saves and shows the Undo prompt (`UndoCenter`), and `restore(_:)` brings back the same IDs and values. If the simulator is missing, create it with `xcrun simctl create "iPhone 17" com.apple.CoreSimulator.SimDeviceType.iPhone-17 com.apple.CoreSimulator.SimRuntime.iOS-27-0`.
 
 ## Design checkpoint (issue #2)
 

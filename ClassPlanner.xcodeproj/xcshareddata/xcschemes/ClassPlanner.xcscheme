@@ -29,6 +29,16 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C1A550000000000000000027"
+               BuildableName = "ClassPlannerUITests.xctest"
+               BlueprintName = "ClassPlannerUITests"
+               ReferencedContainer = "container:ClassPlanner.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
