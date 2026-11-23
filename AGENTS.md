@@ -16,6 +16,12 @@
 - Two orderings: `fewestDays` (days, then gaps) and `shortestGaps` (gaps, then days); ties go to the earlier first class, then the earlier last class, then the key. Results keep the best 500 per ordering, with `totalCount` for all of them. `isExhaustive` is false if the 2,000,000-step budget stopped the search, in which case `totalCount` is a lower bound.
 - Call `ScheduleSearch.outcome(for:)` from the UI. It runs off the main actor and stops when its task is cancelled. Results don't depend on input order.
 
+### Calendar
+
+- `CalendarLayout` (core) decides the visible days, hour range, and side-by-side lanes; the SwiftUI `WeekCalendar` only draws it. Event heights always match real durations: short meetings get thin blocks without text, and details come from tapping or VoiceOver.
+- Settings live in `@AppStorage` (`CalendarSettings`): weekends on/off (a weekend column still shows if a class meets then) and week start (Mon/Sun). The editors' day toggles follow the week start.
+- Event text inside calendar blocks is capped at the Large type size; the agenda, detail sheet, and everything else scale fully.
+
 Commands (run from the repository root):
 
 ```sh
@@ -32,7 +38,7 @@ UI tests (`ClassPlannerUITests`, about two minutes) drive the entry flows in the
 TEST_RUNNER_SCREENSHOT_DIR=/tmp/class-planner-shots xcodebuild -project ClassPlanner.xcodeproj -scheme ClassPlanner -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath .build/DerivedData test
 ```
 
-Debug launch arguments: `-ui-testing` uses an in-memory store, and `-seed-sample` adds the Fall 2026 sample plan (CHEM 101 with three sections, MATH 120, Work, Weekend shift).
+Debug launch arguments: `-ui-testing` uses an in-memory store and resets calendar settings, `-seed-sample` adds the Fall 2026 sample plan (CHEM 101 with three sections, MATH 120, Work, Weekend shift), and `-seed-display` adds a plan for checking the calendar (early and late classes, a 15-minute meeting, a Saturday lab, a Sunday shift, long names).
 
 Deletes follow the Undo pattern: `remove…` returns a snapshot, the app saves and shows the Undo prompt (`UndoCenter`), and `restore(_:)` brings back the same IDs and values. If the simulator is missing, create it with `xcrun simctl create "iPhone 17" com.apple.CoreSimulator.SimDeviceType.iPhone-17 com.apple.CoreSimulator.SimRuntime.iOS-27-0`.
 

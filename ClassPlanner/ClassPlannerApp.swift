@@ -8,6 +8,9 @@ struct ClassPlannerApp: App {
 
     init() {
         let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("-ui-testing") {
+            for key in [CalendarSettings.showWeekends, CalendarSettings.weekStart] { UserDefaults.standard.removeObject(forKey: key) }
+        }
         do {
             container = try PlannerStore.makeContainer(inMemory: arguments.contains("-ui-testing"))
         } catch {
@@ -15,6 +18,7 @@ struct ClassPlannerApp: App {
         }
         #if DEBUG
         if arguments.contains("-seed-sample") { SampleData.seed(in: container.mainContext) }
+        if arguments.contains("-seed-display") { SampleData.seedDisplay(in: container.mainContext) }
         #endif
     }
 

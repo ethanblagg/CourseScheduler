@@ -9,6 +9,7 @@ struct PlanView: View {
     @Bindable var plan: Plan
     @FocusState private var editingName: Bool
     @State private var deleting = false
+    @State private var outcome: ScheduleOutcome?
 
     var body: some View {
         List {
@@ -63,8 +64,20 @@ struct PlanView: View {
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
                 .padding()
+            } else if case .ready = plan.readiness, let outcome {
+                Button {
+                    router.path.append(.schedules(plan))
+                } label: {
+                    Text(outcome.headline)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(isNoneFit(outcome) ? .red : .accentColor)
+                .controlSize(.large)
+                .padding()
             }
         }
+        .task(id: plan.readiness) { outcome = await plan.scheduleOutcome() }
         .onChange(of: editingName) { _, editing in
             if !editing { restoreBlankName() }
         }
@@ -81,6 +94,10 @@ struct PlanView: View {
         case .unavailable(let id):
             return plan.unavailableTimes.first { $0.id == id }.map { ($0.title, .unavailable($0, isNew: false)) }
         }
+    }
+
+    private func isNoneFit(_ outcome: ScheduleOutcome) -> Bool {
+        if case .noneFit = outcome { true } else { false }
     }
 
     private func restoreBlankName() {

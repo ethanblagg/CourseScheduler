@@ -6,6 +6,7 @@ enum Route: Hashable {
     case plan(Plan)
     case course(Course, isNew: Bool)
     case unavailable(UnavailableTime, isNew: Bool)
+    case schedules(Plan)
 }
 
 @Observable
@@ -28,6 +29,7 @@ struct RootView: View {
                     case .plan(let plan): PlanView(plan: plan)
                     case .course(let course, let isNew): CourseView(course: course, isNew: isNew)
                     case .unavailable(let time, let isNew): UnavailableView(time: time, isNew: isNew)
+                    case .schedules(let plan): SchedulesView(plan: plan)
                     }
                 }
         }

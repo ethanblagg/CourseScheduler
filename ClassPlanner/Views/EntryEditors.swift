@@ -286,6 +286,7 @@ struct UnavailableView: View {
 
 struct WeeklyTimeEditor<Fields: WeeklyTimeFields & Observable, Header: View>: View {
     @Environment(\.dynamicTypeSize) private var typeSize
+    @AppStorage(CalendarSettings.weekStart) private var weekStart = Weekday.monday
     var fields: Fields
     let showMissing: Bool
     let removeLabel: String
@@ -335,7 +336,7 @@ struct WeeklyTimeEditor<Fields: WeeklyTimeFields & Observable, Header: View>: Vi
 
     @ViewBuilder
     private var dayToggles: some View {
-        let days = Weekday.week(startingOn: .monday)
+        let days = Weekday.week(startingOn: weekStart)
         if typeSize.isAccessibilitySize {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 3), spacing: 4) {
                 ForEach(days) { dayButton($0) }
